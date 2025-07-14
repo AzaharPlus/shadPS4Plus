@@ -45,10 +45,10 @@ void CheckUpdate::CheckForUpdates(const bool showMessage) {
     while (checkName) {
         updateChannel = QString::fromStdString(Config::getUpdateChannel());
         if (updateChannel == "Nightly") {
-            url = QUrl("https://api.github.com/repos/shadps4-emu/shadPS4/releases");
+            url = QUrl("https://api.github.com/repos/AzaharPlus/shadPS4Plus/releases");
             checkName = false;
         } else if (updateChannel == "Release") {
-            url = QUrl("https://api.github.com/repos/shadps4-emu/shadPS4/releases/latest");
+            url = QUrl("https://api.github.com/repos/AzaharPlus/shadPS4Plus/releases/latest");
             checkName = false;
         } else {
             if (Common::g_is_release) {
