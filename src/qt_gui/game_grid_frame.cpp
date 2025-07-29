@@ -93,13 +93,18 @@ void GameGridFrame::PopulateGameGrid(QVector<GameInfo> m_games_search, bool from
     m_games_shared = std::make_shared<QVector<GameInfo>>(m_games_);
     icon_size = Config::getIconSizeGrid(); // update icon size for resize event.
 
-    int gamesPerRow = windowWidth / (icon_size + 20); // 2 x cell widget border size.
+    int gamesPerRow = (icon_size + 20 > 0) ? windowWidth / (icon_size + 20) : 1;
+    if (gamesPerRow <= 0)
+        gamesPerRow = 1; // Prevent division by zero
+
     int row = 0;
     int gameCounter = 0;
+
     int rowCount = m_games_.size() / gamesPerRow;
     if (m_games_.size() % gamesPerRow != 0) {
         rowCount += 1; // Add an extra row for the remainder
     }
+
 
     int column = 0;
     this->setColumnCount(gamesPerRow);
