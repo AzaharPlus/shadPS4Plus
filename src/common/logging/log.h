@@ -7,7 +7,6 @@
 #include <array>
 #include <string_view>
 
-#include "common/logging/formatter.h"
 #include "common/logging/types.h"
 
 namespace Common::Log {
@@ -20,16 +19,17 @@ constexpr const char* TrimSourcePath(std::string_view source) {
     return source.data() + idx;
 }
 
+static void Stop(){}
 /// Logs a message to the global logger, using fmt
-void FmtLogMessageImpl(Class log_class, Level log_level, const char* filename,
+static void FmtLogMessageImpl(Class log_class, Level log_level, const char* filename,
                        unsigned int line_num, const char* function, const char* format,
-                       const fmt::format_args& args);
+                       const void* args){}
 
 template <typename... Args>
 void FmtLogMessage(Class log_class, Level log_level, const char* filename, unsigned int line_num,
                    const char* function, const char* format, const Args&... args) {
     FmtLogMessageImpl(log_class, log_level, filename, line_num, function, format,
-                      fmt::make_format_args(args...));
+                      NULL);
 }
 
 } // namespace Common::Log

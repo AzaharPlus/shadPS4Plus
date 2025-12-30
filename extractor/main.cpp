@@ -9,6 +9,12 @@ int main(int argc, char** argv){
 	std::filesystem::path file;
 	file = "D:\\test.pkg";
 	
+	if (Loader::DetectFileType(file) == Loader::FileTypes::Pkg) {
+		std::cout << file << " is a valid PKG" << std::endl;
+	} else {
+		std::cout << file << " doesn't appear to be a valid PKG file" << std::endl;
+	}
+	
 	std::cout << "Hello World" << " " << file << std::endl;
 	return 0;
 	
