@@ -11,6 +11,8 @@ int main(int argc, char** argv){
 	
 	if (Loader::DetectFileType(file) == Loader::FileTypes::Pkg) {
 		std::cout << file << " is a valid PKG" << std::endl;
+		
+		PKG pkg = PKG();
 	} else {
 		std::cout << file << " doesn't appear to be a valid PKG file" << std::endl;
 	}
