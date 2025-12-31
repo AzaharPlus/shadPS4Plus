@@ -20,6 +20,7 @@ add_definitions(-DNTDDI_VERSION=0x0A000006 -D_WIN32_WINNT=0x0A00 -DWINVER=0x0A00
 add_executable(pkg_extractor main.cpp
 	../src/core/loader.cpp
 	../src/core/file_format/pkg.cpp
+	../src/core/file_format/psf.cpp
 	../src/core/file_format/pkg_type.cpp
 	../src/core/crypto/crypto.cpp
 	../src/common/io_file.cpp

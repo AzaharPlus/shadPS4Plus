@@ -2,6 +2,7 @@
 
 
 #include "core/file_format/pkg.h"
+#include "core/file_format/psf.h"
 #include "core/loader.h"
 
 
@@ -10,14 +11,33 @@ int main(int argc, char** argv){
 	file = "D:\\test.pkg";
 	
 	if (Loader::DetectFileType(file) == Loader::FileTypes::Pkg) {
-		std::cout << file << " is a valid PKG" << std::endl;
+		std::cout << file << " is a valid PKG\n" << std::endl;
 		
 		PKG pkg = PKG();
+		
+		std::string failreason;
+		if (!pkg.Open(file, failreason)) {
+            std::cout << "Cannot open PKG file : " << failreason << std::endl;
+        }else{
+			std::cout << "open PKG file success" << std::endl;
+			
+			PSF psf = PSF();
+			
+			if (!psf.Open(pkg.sfo)) {
+				std::cout << "Could not read SFO." << std::endl;
+			}else{
+				std::cout << "open PSF success" << std::endl;
+				
+				std::string category;
+				category += *psf.GetString("CATEGORY");
+				std::cout << "PSF category = " << category << std::endl;
+			}
+		}
 	} else {
 		std::cout << file << " doesn't appear to be a valid PKG file" << std::endl;
 	}
 	
-	std::cout << "Hello World" << " " << file << std::endl;
+	std::cout << "\nTHE END " << file << std::endl;
 	return 0;
 	
 	// pkg viewer
