@@ -7,9 +7,17 @@
 #include "common/string_util.h"
 #include "core/loader.h"
 
-int main(int argc, char** argv){	
-	std::filesystem::path file = "D:\\test.pkg";
-	std::filesystem::path output_folder_path = "D:\\install";
+int main(int argc, char** argv){
+	std::filesystem::path file = "";
+	std::filesystem::path output_folder_path = "";
+	
+	if(argc > 1){
+		file += argv[1];
+		
+		if(argc > 2){
+			output_folder_path += argv[2];
+		}
+	}
 	
 	if (Loader::DetectFileType(file) == Loader::FileTypes::Pkg) {
 		std::cout << file << " is a valid PKG\n" << std::endl;
