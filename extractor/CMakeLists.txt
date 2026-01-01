@@ -26,7 +26,8 @@ add_executable(pkg_extractor main.cpp
 	../src/common/io_file.cpp
 	../src/common/assert.cpp
 	../src/common/error.cpp
-	../src/common/path_util.cpp)
+	../src/common/path_util.cpp
+	../src/common/string_util.cpp)
 
 add_library(libcryptopp STATIC IMPORTED)
 set_property(TARGET libcryptopp PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/cryptopp/cryptopp/libcryptopp.a")

@@ -4,11 +4,13 @@
 #include "core/file_format/pkg.h"
 #include "core/file_format/psf.h"
 #include "common/path_util.h"
+#include "common/string_util.h"
 #include "core/loader.h"
 
 int main(int argc, char** argv){	
 	std::filesystem::path file = "D:\\test.pkg";
 	std::filesystem::path game_install_dir = "D:\\install";
+	std::filesystem::path addon_install_dir = "D:\\addon";
 	
 	if (Loader::DetectFileType(file) == Loader::FileTypes::Pkg) {
 		std::cout << file << " is a valid PKG\n" << std::endl;
@@ -76,6 +78,23 @@ int main(int argc, char** argv){
 				
 				if(std::filesystem::exists(game_folder_path)){
 					std::cout << game_folder_path << "already exists" << std::endl;
+					
+					std::string content_id;
+					if (auto value = psf.GetString("CONTENT_ID"); value.has_value()) {
+						content_id = std::string{*value};
+						
+						std::string entitlement_label = Common::SplitString(content_id, '-')[2];
+						auto addon_extract_path = addon_install_dir / pkg.GetTitleID() / entitlement_label;
+						
+						std::cout << "addon_extract_path = " << addon_extract_path << std::endl;
+						
+						if (!pkgType.contains("PATCH") && category == "ac"){
+							game_update_path = addon_extract_path;
+							std::cout << "Use addon_extract_path as game_update_path" << std::endl;
+						}
+					} else {
+						std::cout << "PSF file there is no CONTENT_ID" << std::endl;
+					}
 				}else{
 					std::cout << game_folder_path << "doesn't exist" << std::endl;
 				}
@@ -87,6 +106,7 @@ int main(int argc, char** argv){
 					
 					for(int i=0; i<nfiles; i++)
 					{
+						std::cout << "Extracting file " << i+1 << " of " << nfiles << std::endl;
 						pkg.ExtractFiles(i);
 					}
 				}
@@ -107,21 +127,6 @@ int main(int argc, char** argv){
 		pkgViewer->show();
 	*/
 	
-	// install pkg files
-	/*	QFileDialog dialog;
-		dialog.setFileMode(QFileDialog::ExistingFiles);
-		dialog.setNameFilter(tr("PKG File (*.PKG *.pkg)"));
-		if (dialog.exec()) {
-			QStringList fileNames = dialog.selectedFiles();
-			int nPkg = fileNames.size();
-			int pkgNum = 0;
-			for (const QString& file : fileNames) {
-				++pkgNum;
-				std::filesystem::path path = Common::FS::PathFromQString(file);
-				MainWindow::InstallDragDropPkg(path, pkgNum, nPkg);
-			}
-		}
-	*/
 	
 	// install one pkg
 	/*std::filesystem::path file;
