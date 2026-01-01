@@ -71,14 +71,7 @@ int main(int argc, char** argv){
 					game_update_path = use_game_update ? game_folder_path.parent_path() /
 															 (std::string{pkg.GetTitleID()} + "-patch")
 													   : game_folder_path;
-				}
-				
-				std::cout << "actual game_folder_path " << game_folder_path << std::endl;
-				std::cout << "actual game_update_path " << game_update_path << std::endl;
-				
-				if(std::filesystem::exists(game_folder_path)){
-					std::cout << game_folder_path << "already exists" << std::endl;
-					
+
 					std::string content_id;
 					if (auto value = psf.GetString("CONTENT_ID"); value.has_value()) {
 						content_id = std::string{*value};
@@ -88,16 +81,17 @@ int main(int argc, char** argv){
 						
 						std::cout << "addon_extract_path = " << addon_extract_path << std::endl;
 						
-						if (!pkgType.contains("PATCH") && category == "ac"){
+						if (category == "ac"){
 							game_update_path = addon_extract_path;
 							std::cout << "Use addon_extract_path as game_update_path" << std::endl;
 						}
 					} else {
 						std::cout << "PSF file there is no CONTENT_ID" << std::endl;
 					}
-				}else{
-					std::cout << game_folder_path << "doesn't exist" << std::endl;
 				}
+				
+				std::cout << "actual game_folder_path " << game_folder_path << std::endl;
+				std::cout << "actual game_update_path " << game_update_path << std::endl;
 				
 				if (!pkg.Extract(file, game_update_path, failreason)) {
 					std::cout << "Cannot extract PKG file : " << failreason << std::endl;
