@@ -1,14 +1,14 @@
+// adapted from InstallDragDropPkg in main_window.cpp
+
 #include <iostream>
-
-
 #include "core/file_format/pkg.h"
 #include "core/file_format/psf.h"
+#include "common/path_util.h"
 #include "core/loader.h"
 
-
 int main(int argc, char** argv){	
-	std::filesystem::path file;
-	file = "D:\\test.pkg";
+	std::filesystem::path file = "D:\\test.pkg";
+	std::filesystem::path game_install_dir = "D:\\install";
 	
 	if (Loader::DetectFileType(file) == Loader::FileTypes::Pkg) {
 		std::cout << file << " is a valid PKG\n" << std::endl;
@@ -31,6 +31,65 @@ int main(int argc, char** argv){
 				std::string category;
 				category += *psf.GetString("CATEGORY");
 				std::cout << "PSF category = " << category << std::endl;
+				
+				std::string pkgType = pkg.GetPkgFlags();
+				std::cout << "pkgType = " << pkgType << std::endl;
+				
+				bool use_game_update = pkgType.contains("PATCH");
+				auto game_folder_path = game_install_dir / pkg.GetTitleID();
+				auto game_update_path = use_game_update ? game_folder_path.parent_path() /
+															  (std::string{pkg.GetTitleID()} + "-patch")
+														: game_folder_path;
+				const int max_depth = 5;
+				
+				std::cout << "default game_folder_path " << game_folder_path << std::endl;
+				std::cout << "default game_update_path " << game_update_path << std::endl;
+				
+				if (pkgType.contains("PATCH")) {
+					// For patches, try to find the game recursively
+					auto found_game = Common::FS::FindGameByID(game_install_dir,
+															   std::string{pkg.GetTitleID()}, max_depth);
+					if (found_game.has_value()) {
+						game_folder_path = found_game.value().parent_path();
+						game_update_path = use_game_update ? game_folder_path.parent_path() /
+																 (std::string{pkg.GetTitleID()} + "-patch")
+														   : game_folder_path;
+					}
+				} else {
+					// For base games, we check if the game is already installed
+					auto found_game = Common::FS::FindGameByID(game_install_dir,
+															   std::string{pkg.GetTitleID()}, max_depth);
+					if (found_game.has_value()) {
+						game_folder_path = found_game.value().parent_path();
+					}
+					// If the game is not found, we install it in the game install directory
+					else {
+						game_folder_path = game_install_dir / pkg.GetTitleID();
+					}
+					game_update_path = use_game_update ? game_folder_path.parent_path() /
+															 (std::string{pkg.GetTitleID()} + "-patch")
+													   : game_folder_path;
+				}
+				
+				std::cout << "actual game_folder_path " << game_folder_path << std::endl;
+				std::cout << "actual game_update_path " << game_update_path << std::endl;
+				
+				if(std::filesystem::exists(game_folder_path)){
+					std::cout << game_folder_path << "already exists" << std::endl;
+				}else{
+					std::cout << game_folder_path << "doesn't exist" << std::endl;
+				}
+				
+				if (!pkg.Extract(file, game_update_path, failreason)) {
+					std::cout << "Cannot extract PKG file : " << failreason << std::endl;
+				} else {
+					int nfiles = pkg.GetNumberOfFiles();
+					
+					for(int i=0; i<nfiles; i++)
+					{
+						pkg.ExtractFiles(i);
+					}
+				}
 			}
 		}
 	} else {
