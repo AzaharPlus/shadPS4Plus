@@ -9,8 +9,7 @@
 
 int main(int argc, char** argv){	
 	std::filesystem::path file = "D:\\test.pkg";
-	std::filesystem::path game_install_dir = "D:\\install";
-	std::filesystem::path addon_install_dir = "D:\\addon";
+	std::filesystem::path output_folder_path = "D:\\install";
 	
 	if (Loader::DetectFileType(file) == Loader::FileTypes::Pkg) {
 		std::cout << file << " is a valid PKG\n" << std::endl;
@@ -30,6 +29,8 @@ int main(int argc, char** argv){
 			}else{
 				std::cout << "open PSF success" << std::endl;
 				
+				output_folder_path /= pkg.GetTitleID();
+				
 				std::string category;
 				category += *psf.GetString("CATEGORY");
 				std::cout << "PSF category = " << category << std::endl;
@@ -37,70 +38,33 @@ int main(int argc, char** argv){
 				std::string pkgType = pkg.GetPkgFlags();
 				std::cout << "pkgType = " << pkgType << std::endl;
 				
-				bool use_game_update = pkgType.contains("PATCH");
-				auto game_folder_path = game_install_dir / pkg.GetTitleID();
-				auto game_update_path = use_game_update ? game_folder_path.parent_path() /
-															  (std::string{pkg.GetTitleID()} + "-patch")
-														: game_folder_path;
-				const int max_depth = 5;
-				
-				std::cout << "default game_folder_path " << game_folder_path << std::endl;
-				std::cout << "default game_update_path " << game_update_path << std::endl;
-				
-				if (pkgType.contains("PATCH")) {
-					// For patches, try to find the game recursively
-					auto found_game = Common::FS::FindGameByID(game_install_dir,
-															   std::string{pkg.GetTitleID()}, max_depth);
-					if (found_game.has_value()) {
-						game_folder_path = found_game.value().parent_path();
-						game_update_path = use_game_update ? game_folder_path.parent_path() /
-																 (std::string{pkg.GetTitleID()} + "-patch")
-														   : game_folder_path;
-					}
-				} else {
-					// For base games, we check if the game is already installed
-					auto found_game = Common::FS::FindGameByID(game_install_dir,
-															   std::string{pkg.GetTitleID()}, max_depth);
-					if (found_game.has_value()) {
-						game_folder_path = found_game.value().parent_path();
-					}
-					// If the game is not found, we install it in the game install directory
-					else {
-						game_folder_path = game_install_dir / pkg.GetTitleID();
-					}
-					game_update_path = use_game_update ? game_folder_path.parent_path() /
-															 (std::string{pkg.GetTitleID()} + "-patch")
-													   : game_folder_path;
-
+				if(pkgType.contains("PATCH")){
+					std::cout << "pkg is a game update" << std::endl;
+					output_folder_path += "-patch";
+				}else if(category == "ac"){
+					std::cout << "pkg is a dlc" << std::endl;
 					std::string content_id;
 					if (auto value = psf.GetString("CONTENT_ID"); value.has_value()) {
 						content_id = std::string{*value};
-						
 						std::string entitlement_label = Common::SplitString(content_id, '-')[2];
-						auto addon_extract_path = addon_install_dir / pkg.GetTitleID() / entitlement_label;
-						
-						std::cout << "addon_extract_path = " << addon_extract_path << std::endl;
-						
-						if (category == "ac"){
-							game_update_path = addon_extract_path;
-							std::cout << "Use addon_extract_path as game_update_path" << std::endl;
-						}
+						output_folder_path /= entitlement_label;
 					} else {
 						std::cout << "PSF file there is no CONTENT_ID" << std::endl;
 					}
+				}else{
+					std::cout << "pkg is a base game" << std::endl;
 				}
 				
-				std::cout << "actual game_folder_path " << game_folder_path << std::endl;
-				std::cout << "actual game_update_path " << game_update_path << std::endl;
+				std::cout << "Extracting pkg to " << output_folder_path << std::endl;
 				
-				if (!pkg.Extract(file, game_update_path, failreason)) {
+				if (!pkg.Extract(file, output_folder_path, failreason)) {
 					std::cout << "Cannot extract PKG file : " << failreason << std::endl;
 				} else {
 					int nfiles = pkg.GetNumberOfFiles();
 					
 					for(int i=0; i<nfiles; i++)
 					{
-						std::cout << "Extracting file " << i+1 << " of " << nfiles << std::endl;
+						std::cout << "Extracting file " << i+1 << " of " << nfiles << " to " << output_folder_path << std::endl;
 						pkg.ExtractFiles(i);
 					}
 				}
