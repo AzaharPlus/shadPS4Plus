@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ShadPs4Plus PKG Extractor
+Exec=pkg_extractor
+Terminal=true
+Type=Application
+Icon=icon
+Comment=ShadPs4Plus PKG Extractor
+Categories=Game;Emulator;
+StartupWMClass=pkg_extractor;
+
