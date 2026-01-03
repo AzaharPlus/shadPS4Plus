@@ -46,11 +46,15 @@ int main(int argc, char** argv){
 				std::string pkgType = pkg.GetPkgFlags();
 				std::cout << "pkgType = " << pkgType << std::endl;
 				
+				int ret = 0;
+				
 				if(pkgType.contains("PATCH")){
 					std::cout << "pkg is a game update" << std::endl;
+					ret = 102;
 					output_folder_path += "-patch";
 				}else if(category == "ac"){
 					std::cout << "pkg is a dlc" << std::endl;
+					ret = 103;
 					std::string content_id;
 					if (auto value = psf.GetString("CONTENT_ID"); value.has_value()) {
 						content_id = std::string{*value};
@@ -61,6 +65,12 @@ int main(int argc, char** argv){
 					}
 				}else{
 					std::cout << "pkg is a base game" << std::endl;
+					ret = 101;
+				}
+				
+				if(argc == 3 && std::string("--check-type") == argv[2])
+				{
+					return ret;
 				}
 				
 				std::cout << "Extracting pkg to " << output_folder_path << std::endl;
