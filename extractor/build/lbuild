@@ -1,1 +1,3 @@
+./cryptobuild
+
 cmake --build . --config RELEASE
