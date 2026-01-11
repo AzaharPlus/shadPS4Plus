@@ -4,3 +4,4 @@ cp /clang64/bin/libc++.dll ./ShadPs4Plus-PkgExtractor-VERSION-windows/
 cp ./pkg_extractor.exe ./ShadPs4Plus-PkgExtractor-VERSION-windows/
 strip -s ./ShadPs4Plus-PkgExtractor-VERSION-windows/*
 cp ../install_pkg.bat ./ShadPs4Plus-PkgExtractor-VERSION-windows/
+cp ../readme_windows.txt ./ShadPs4Plus-PkgExtractor-VERSION-windows/

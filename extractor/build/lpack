@@ -17,3 +17,4 @@ mv ShadPs4Plus_PKG_Extractor-x86_64.AppImage pkg_extractor.AppImage
 mkdir -p ./ShadPs4Plus-PkgExtractor-VERSION-linux
 cp ./pkg_extractor.AppImage ./ShadPs4Plus-PkgExtractor-VERSION-linux/
 cp ../install_pkg.sh ./ShadPs4Plus-PkgExtractor-VERSION-linux/
+cp ../readme_linux.txt ./ShadPs4Plus-PkgExtractor-VERSION-linux/
