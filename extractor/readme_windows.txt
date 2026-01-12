@@ -16,4 +16,4 @@
 	Can then be called in command line.
 	The first argument is the path to the pkg file to extract.
 	
-	Alternatively, you can drag and drop the pkg file onto the exe and it will extract it where it needs to be.
+	Alternatively, you can drag and drop the pkg file onto the bat and it will extract it where it needs to be.
