@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024 shadPS4 Emulator Project
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+#include <iostream>
 #include <zlib.h>
 #include "common/io_file.h"
 #include "core/file_format/pkg.h"
@@ -437,6 +438,7 @@ void PKG::ExtractFiles(const int index) {
         std::vector<u8> pfs_decrypted(pfsc_buf_size);
 
         for (int j = 0; j < nblocks; j++) {
+			std::cout << "\r\tPart " << j + 1 << " of " << nblocks;
             u64 sectorOffset =
                 sectorMap[sector_loc + j]; // offset into PFSC_image and not pfs_image.
             u64 sectorSize = sectorMap[sector_loc + j + 1] -

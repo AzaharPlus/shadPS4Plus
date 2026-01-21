@@ -82,7 +82,7 @@ int main(int argc, char** argv){
 					
 					for(int i=0; i<nfiles; i++)
 					{
-						std::cout << "Extracting file " << i+1 << " of " << nfiles << " to " << output_folder_path << std::endl;
+						std::cout << "\rExtracting file " << i+1 << " of " << nfiles << " to " << output_folder_path << std::endl;
 						pkg.ExtractFiles(i);
 					}
 				}
