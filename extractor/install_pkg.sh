@@ -6,14 +6,14 @@ addonsDir="PATH_TO_ADDONS_DIR"
 if [ "$gamesDir" == "PATH_TO_GAMES_DIR" ]; then
 	echo You need to update gamesDir with the games path used by ShadPs4
 	echo "Press [enter] to close"
-	read
+	if [ "$2" != "--batch" ]; then read ; fi
 	exit
 fi
 
 if [ "$addonsDir" == "PATH_TO_ADDONS_DIR" ]; then
 	echo You need to update addonsDir with the addons path used by ShadPs4
 	echo "Press [enter] to close"
-	read
+	if [ "$2" != "--batch" ]; then read ; fi
 	exit
 fi
 
@@ -37,4 +37,4 @@ else
 fi
 
 echo "Press [enter] to close"
-read
+if [ "$2" != "--batch" ]; then read ; fi
