@@ -28,23 +28,23 @@ int main(int argc, char** argv){
 		if (!pkg.Open(file, failreason)) {
             std::cout << "Cannot open PKG file : " << failreason << std::endl;
         }else{
-			std::cout << "open PKG file success" << std::endl;
+		//	std::cout << "open PKG file success" << std::endl;
 			
 			PSF psf = PSF();
 			
 			if (!psf.Open(pkg.sfo)) {
 				std::cout << "Could not read SFO." << std::endl;
 			}else{
-				std::cout << "open PSF success" << std::endl;
+			//	std::cout << "open PSF success" << std::endl;
 				
 				output_folder_path /= pkg.GetTitleID();
 				
 				std::string category;
 				category += *psf.GetString("CATEGORY");
-				std::cout << "PSF category = " << category << std::endl;
+			//	std::cout << "PSF category = " << category << std::endl;
 				
 				std::string pkgType = pkg.GetPkgFlags();
-				std::cout << "pkgType = " << pkgType << std::endl;
+			//	std::cout << "pkgType = " << pkgType << std::endl;
 				
 				int ret = 0;
 				
@@ -82,7 +82,7 @@ int main(int argc, char** argv){
 					
 					for(int i=0; i<nfiles; i++)
 					{
-						std::cout << "\rExtracting file " << i+1 << " of " << nfiles << " to " << output_folder_path << std::endl;
+						std::cout << "\r      Extracting file " << i+1 << " of " << nfiles;
 						pkg.ExtractFiles(i);
 					}
 				}

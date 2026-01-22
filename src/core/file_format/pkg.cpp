@@ -438,7 +438,7 @@ void PKG::ExtractFiles(const int index) {
         std::vector<u8> pfs_decrypted(pfsc_buf_size);
 
         for (int j = 0; j < nblocks; j++) {
-			std::cout << "\r\tPart " << j + 1 << " of " << nblocks;
+			std::cout << "\r" << ((j + 1) * 100) / nblocks << "%  ";
             u64 sectorOffset =
                 sectorMap[sector_loc + j]; // offset into PFSC_image and not pfs_image.
             u64 sectorSize = sectorMap[sector_loc + j + 1] -
