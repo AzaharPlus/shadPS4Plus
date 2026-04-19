@@ -379,7 +379,7 @@ bool IOFile::Seek(s64 offset, SeekOrigin origin) const {
 
     errno = 0;
 
-    const auto seek_result = fseeko64(file, offset, ToSeekOrigin(origin)) == 0;
+    const auto seek_result = fseeko(file, static_cast<off_t>(offset), ToSeekOrigin(origin)) == 0;
 
     if (!seek_result) {
         const auto ec = std::error_code{errno, std::generic_category()};
